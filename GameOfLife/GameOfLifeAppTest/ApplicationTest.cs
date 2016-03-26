@@ -20,4 +20,5 @@ namespace GameOfLifeAppTest
             // Assert when mockApp.Reset() then Image equals to the original one
         }
     }
+
 }
