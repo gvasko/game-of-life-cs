@@ -9,9 +9,9 @@ namespace IGameOfLife
 
     public enum CellStatus { Alive, Dead };
 
-    public struct Coord
+    public struct Cell
     {
-        public Coord(int x, int y)
+        public Cell(int x, int y)
         {
             this.x = x;
             this.y = y;
@@ -29,43 +29,67 @@ namespace IGameOfLife
         }
     }
 
+    public delegate void CellVisitorDelegate(Cell cell);
+
+    // TODO: how to test struct?
     public struct BoundingBox
     {
         public BoundingBox(int x1, int y1, int x2, int y2)
         {
-            minPoint = new Coord(Math.Min(x1, x2), Math.Min(y1, y2));
-            maxPoint = new Coord(Math.Max(x1, x2), Math.Max(y1, y2));
+            minPoint = new Cell(Math.Min(x1, x2), Math.Min(y1, y2));
+            maxPoint = new Cell(Math.Max(x1, x2), Math.Max(y1, y2));
         }
 
-        public BoundingBox(Coord[] coords)
+        public BoundingBox(Cell[] cells)
         {
-            minPoint = new Coord(coords.Select(c => c.X).Min(), coords.Select(c => c.Y).Min());
-            maxPoint = new Coord(coords.Select(c => c.X).Max(), coords.Select(c => c.Y).Max());
+            minPoint = new Cell(cells.Select(c => c.X).Min(), cells.Select(c => c.Y).Min());
+            maxPoint = new Cell(cells.Select(c => c.X).Max(), cells.Select(c => c.Y).Max());
         }
 
-        private Coord minPoint;
-        public Coord MinPoint { get { return minPoint; } }
+        private Cell minPoint;
+        public Cell MinPoint { get { return minPoint; } }
 
-        private Coord maxPoint;
-        public Coord MaxPoint { get { return maxPoint; } }
+        private Cell maxPoint;
+        public Cell MaxPoint { get { return maxPoint; } }
 
-        public bool IsInside(Coord coord)
+        public bool IsInside(Cell cell)
         {
             return
-                minPoint.X <= coord.X && coord.X <= maxPoint.X &&
-                minPoint.Y <= coord.Y && coord.Y <= maxPoint.Y;
+                minPoint.X <= cell.X && cell.X <= maxPoint.X &&
+                minPoint.Y <= cell.Y && cell.Y <= maxPoint.Y;
+        }
+
+        public void VisitEachCell(CellVisitorDelegate visitor)
+        {
+            for (int x = MinPoint.X; x <= MaxPoint.X; x++)
+            {
+                for (int y = MinPoint.Y; y <= MaxPoint.Y; y++)
+                {
+                    Cell currentCell = new Cell(x, y);
+                    visitor(currentCell);
+                }
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[{0} .. {1}]", minPoint.ToString(), maxPoint.ToString());
         }
 
     }
 
-    public delegate void CellVisitorDelegate(Coord coord, CellStatus status);
+    public delegate void CellStatusVisitorDelegate(Cell cell, CellStatus status);
 
     public interface ILifeState
     {
         BoundingBox BoundingBox { get; }
 
-        CellStatus GetCellStatus(Coord coord);
+        CellStatus GetCellStatus(Cell cell);
 
-        void VisitLiveCells(CellVisitorDelegate visitor);
+        void VisitLiveCells(CellStatusVisitorDelegate visitor);
+
+        void VisitEachCell(CellStatusVisitorDelegate visitor);
+
+        void VisitEachNeightboursOfCell(Cell cell, CellStatusVisitorDelegate visitor);
     }
 }
