@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace GameOfLifeApp
 {
-    public partial class Form1 : Form
+    public partial class GameOfLifeForm : Form
     {
-        public Form1()
+        public GameOfLifeForm()
         {
             InitializeComponent();
         }
