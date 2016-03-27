@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultFactory.cs" />
     <Compile Include="DefaultLife.cs" />
     <Compile Include="DefaultLifeState.cs" />
     <Compile Include="DefaultRules.cs" />

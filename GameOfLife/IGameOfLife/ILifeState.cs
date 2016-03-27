@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,16 @@ namespace IGameOfLife
 
     public struct Cell
     {
+        public static Cell[] AsCellArray(int[,] intArray)
+        {
+            Cell[] cellArray = new Cell[intArray.GetLength(0)];
+            for (int i = 0; i < intArray.GetLength(0); i++)
+            {
+                    cellArray[i] = new Cell(intArray[i, 0], intArray[i, 1]);
+            }
+            return cellArray;
+        }
+
         public Cell(int x, int y)
         {
             this.x = x;

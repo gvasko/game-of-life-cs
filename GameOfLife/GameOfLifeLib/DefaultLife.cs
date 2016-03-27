@@ -75,7 +75,7 @@ namespace GameOfLifeLib
                     break;
                 }
             }
-            if (!processed)
+            if (!processed && status == CellStatus.Alive)
             {
                 throw new InvalidOperationException("Undefined cell status");
             }

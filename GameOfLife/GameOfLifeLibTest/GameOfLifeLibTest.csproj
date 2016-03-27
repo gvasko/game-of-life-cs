@@ -61,7 +61,7 @@
     <Compile Include="DefaultLifeTest.cs" />
     <Compile Include="DefaultLifeStateObjTest.cs" />
     <Compile Include="DefaultDocumentTest.cs" />
-    <Compile Include="DefaultRulesTest.cs" />
+    <Compile Include="DefaultRulesIntegrationTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GameOfLifeLib\GameOfLifeLib.csproj">
