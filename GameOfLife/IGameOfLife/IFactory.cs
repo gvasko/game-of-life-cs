@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace IGameOfLife
 {
-    interface IFactory
+    public interface IFactory
     {
         ILifeState LoadLifeStateFromFile(string path);
-        ILifeState CreateLifeStateFromCoordinates(int[][] liveCoordinates);
+        ILifeState CreateLifeState(Cell[] cells);
+
+        ILife CreateLife();
     }
 }

@@ -178,6 +178,24 @@ namespace GameOfLifeLibTest
             spyVisitor.Received().Invoke(Arg.Is<Cell>(new Cell(1, -2)), Arg.Is<CellStatus>(CellStatus.Dead));
         }
 
+        [TestMethod]
+        public void Given3x3_WhenComparedWithSameState_ThenEquals()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Given3x3_WhenSameStates_ThenHashCodesAreEqual()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Given3x3_WhenComparedWithDifferentState_ThenDoesNotEqual()
+        {
+            throw new NotImplementedException();
+        }
+
         //[TestMethod]
         //public void GivenTwoInitialStates_WhenShapesJustMoved_ThenTheyEqual()
         //{
