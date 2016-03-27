@@ -36,10 +36,17 @@ namespace GameOfLifeLibTest
         [TestMethod]
         public void Given3x3_WhenCreated_ThenOnly2Alive()
         {
-            Assert.AreEqual(CellStatus.Alive, state.GetCellStatus(alive1));
-            Assert.AreEqual(CellStatus.Alive, state.GetCellStatus(alive2));
-            Assert.AreEqual(CellStatus.Dead, state.GetCellStatus(dead1));
-            Assert.AreEqual(CellStatus.Dead, state.GetCellStatus(dead2));
+            Assert.AreEqual(CellStatus.Dead, state.GetCellStatus(new Cell(-1, -1)));
+            Assert.AreEqual(CellStatus.Dead, state.GetCellStatus(new Cell(-1, 0)));
+            Assert.AreEqual(CellStatus.Alive, state.GetCellStatus(new Cell(-1, 1)));
+
+            Assert.AreEqual(CellStatus.Dead, state.GetCellStatus(new Cell(0, -1)));
+            Assert.AreEqual(CellStatus.Dead, state.GetCellStatus(new Cell(0, 0)));
+            Assert.AreEqual(CellStatus.Dead, state.GetCellStatus(new Cell(0, 1)));
+
+            Assert.AreEqual(CellStatus.Alive, state.GetCellStatus(new Cell(1, -1)));
+            Assert.AreEqual(CellStatus.Dead, state.GetCellStatus(new Cell(1, 0)));
+            Assert.AreEqual(CellStatus.Dead, state.GetCellStatus(new Cell(1, 1)));
         }
 
         [TestMethod]
