@@ -15,7 +15,7 @@ namespace GameOfLifeLib
 
         internal DefaultLifeState(Cell[] liveCells)
         {
-            this.liveCells = liveCells;
+            this.liveCells = new HashSet<Cell>(liveCells).ToArray();
             boundingBox = new BoundingBox(this.liveCells);
         }
 
@@ -73,6 +73,47 @@ namespace GameOfLifeLib
                 }
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (this == obj)
+            {
+                return true;
+            }
+
+            DefaultLifeState that = obj as DefaultLifeState;
+
+            if (that == null)
+            {
+                return false;
+            }
+
+            if (this.liveCells.Length != that.liveCells.Length)
+            {
+                return false;
+            }
+
+            foreach (Cell thisCell in this.liveCells)
+            {
+                if (!that.liveCells.Contains(thisCell))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            foreach (Cell cell in liveCells)
+            {
+                hash = hash * 23 + cell.GetHashCode();
+            }
+            return hash;
+        }
+
     }
 
 }

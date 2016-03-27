@@ -11,8 +11,8 @@ namespace GameOfLifeLibTest
     {
         private Cell alive1;
         private Cell alive2;
-        private Cell dead1;
-        private Cell dead2;
+        private Cell boundingMin;
+        private Cell boundingMax;
         private DefaultLifeState state;
 
         [TestInitialize]
@@ -20,8 +20,8 @@ namespace GameOfLifeLibTest
         {
             alive1 = new Cell(-1, 1);
             alive2 = new Cell(1, -1);
-            dead1 = new Cell(-1, -1);
-            dead2 = new Cell(1, 1);
+            boundingMin = new Cell(-1, -1);
+            boundingMax = new Cell(1, 1);
             Cell[] testData = { alive1, alive2 };
             state = new DefaultLifeState(testData);
         }
@@ -29,8 +29,8 @@ namespace GameOfLifeLibTest
         [TestMethod]
         public void Given3x3_WhenCreated_ThenBoundingBox3x3()
         {
-            Assert.AreEqual(dead1, state.BoundingBox.MinPoint);
-            Assert.AreEqual(dead2, state.BoundingBox.MaxPoint);
+            Assert.AreEqual(boundingMin, state.BoundingBox.MinPoint);
+            Assert.AreEqual(boundingMax, state.BoundingBox.MaxPoint);
         }
 
         [TestMethod]
@@ -183,24 +183,6 @@ namespace GameOfLifeLibTest
             spyVisitor.Received().Invoke(Arg.Is<Cell>(new Cell(-1, -2)), Arg.Is<CellStatus>(CellStatus.Dead));
             spyVisitor.Received().Invoke(Arg.Is<Cell>(new Cell(0, -2)), Arg.Is<CellStatus>(CellStatus.Dead));
             spyVisitor.Received().Invoke(Arg.Is<Cell>(new Cell(1, -2)), Arg.Is<CellStatus>(CellStatus.Dead));
-        }
-
-        [TestMethod]
-        public void Given3x3_WhenComparedWithSameState_ThenEquals()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
-        public void Given3x3_WhenSameStates_ThenHashCodesAreEqual()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
-        public void Given3x3_WhenComparedWithDifferentState_ThenDoesNotEqual()
-        {
-            throw new NotImplementedException();
         }
 
         //[TestMethod]

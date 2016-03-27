@@ -59,6 +59,7 @@
     <Compile Include="DefaultLifeStateTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DefaultLifeTest.cs" />
+    <Compile Include="DefaultLifeStateObjTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GameOfLifeLib\GameOfLifeLib.csproj">
