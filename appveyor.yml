@@ -1,0 +1,8 @@
+environment:
+    EnableNuGetPackageRestore: true
+
+platform: Any CPU
+configuration: Release
+
+before_build:
+    - nuget restore GameOfLife\GameOfLife.sln -verbosity detailed
