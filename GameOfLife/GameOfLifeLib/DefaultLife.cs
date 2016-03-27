@@ -9,8 +9,8 @@ namespace GameOfLifeLib
 {
     internal class DefaultLife : ILife
     {
-        private IDictionary<LifeRuleDelegate, LifeRuleConditionDelegate> ruleConditions;
-        private IList<LifeRuleDelegate> orderedRules;
+        private IDictionary<LifeConditionDelegate, CellStatus> consequences;
+        private IList<LifeConditionDelegate> orderedConditions;
         private IFactory factory;
         private ILifeState currentState;
         private IList<Cell> nextLiveCells;
@@ -18,35 +18,30 @@ namespace GameOfLifeLib
         public DefaultLife(IFactory factory)
         {
             this.factory = factory;
-            ruleConditions = new Dictionary<LifeRuleDelegate, LifeRuleConditionDelegate>();
-            orderedRules = new List<LifeRuleDelegate>();
+            consequences = new Dictionary<LifeConditionDelegate, CellStatus>();
+            orderedConditions = new List<LifeConditionDelegate>();
             nextLiveCells = null;
         }
 
-        public void AddRule(LifeRuleConditionDelegate condition, LifeRuleDelegate rule)
+        public void AddRule(LifeConditionDelegate condition, CellStatus consequence)
         {
             if (condition == null)
             {
                 throw new ArgumentNullException("condition");
             }
 
-            if (rule == null)
-            {
-                throw new ArgumentNullException("rule");
-            }
-
-            if (ruleConditions.ContainsKey(rule))
+            if (consequences.ContainsKey(condition))
             {
                 return;
             }
 
-            ruleConditions[rule] = condition;
-            orderedRules.Add(rule);
+            consequences[condition] = consequence;
+            orderedConditions.Add(condition);
         }
 
         public ILifeState CalculateNextState(ILifeState currentState)
         {
-            if (orderedRules.Count == 0)
+            if (orderedConditions.Count == 0)
             {
                 return currentState;
             }
@@ -67,11 +62,11 @@ namespace GameOfLifeLib
         private void CalculateNextCellStatus(Cell cell, CellStatus status)
         {
             bool processed = false;
-            foreach (LifeRuleDelegate rule in orderedRules)
+            foreach (LifeConditionDelegate condition in orderedConditions)
             {
-                if (ruleConditions[rule](currentState, cell))
+                if (condition(currentState, cell))
                 {
-                    CellStatus nextStatus = rule(currentState, cell);
+                    CellStatus nextStatus = consequences[condition];
                     if (nextStatus == CellStatus.Alive)
                     {
                         nextLiveCells.Add(cell);

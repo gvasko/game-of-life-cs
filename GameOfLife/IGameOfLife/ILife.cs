@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 namespace IGameOfLife
 {
 
-    public delegate bool LifeRuleConditionDelegate(ILifeState state, Cell cell);
-    public delegate CellStatus LifeRuleDelegate(ILifeState state, Cell cell);
+    public delegate bool LifeConditionDelegate(ILifeState state, Cell cell);
 
     public interface ILife
     {
-        void AddRule(LifeRuleConditionDelegate condition, LifeRuleDelegate rule);
+        void AddRule(LifeConditionDelegate condition, CellStatus consequence);
 
         ILifeState CalculateNextState(ILifeState currentState);
     }
