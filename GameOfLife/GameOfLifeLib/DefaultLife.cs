@@ -46,6 +46,11 @@ namespace GameOfLifeLib
 
         public ILifeState CalculateNextState(ILifeState currentState)
         {
+            if (orderedRules.Count == 0)
+            {
+                return currentState;
+            }
+
             this.currentState = currentState;
             nextLiveCells = new List<Cell>();
 

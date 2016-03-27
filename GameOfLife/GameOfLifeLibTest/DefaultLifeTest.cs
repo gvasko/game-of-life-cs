@@ -11,6 +11,7 @@ namespace GameOfLifeLibTest
     {
         private DefaultLife life;
         private ILifeState dummyState;
+        private ILifeState mockState;
         private IFactory spyFactory;
 
         [TestInitialize]
@@ -19,39 +20,49 @@ namespace GameOfLifeLibTest
             spyFactory = Substitute.For<IFactory>();
             life = new DefaultLife(spyFactory);
             dummyState = Substitute.For<ILifeState>();
+
+            mockState = Substitute.For<ILifeState>();
+            var dummyCell = new Cell(0, 0);
+            var dummyCellState = CellStatus.Alive;
+
+            mockState
+                .WhenForAnyArgs(s => s.VisitEachCell(Arg.Any<CellStatusVisitorDelegate>()))
+                .Do(s => s.Arg<CellStatusVisitorDelegate>()(dummyCell, dummyCellState));
+
         }
 
         [TestMethod]
         public void GivenDummyStateAndNoRules_WhenGetNext_ThenReturnsOriginal()
         {
             ILifeState nextState = life.CalculateNextState(dummyState);
-            spyFactory.CreateLifeState(Arg.Any<Cell[]>()).Received(1);
-            throw new NotImplementedException("TODO: ensure it copies that");
+            Assert.AreSame(dummyState, nextState);
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void GivenDummyStateAndRules_WhenNothingIsApplicable_ThenThrowsException()
+        public void GivenMockStateAndRules_WhenNothingIsApplicable_ThenThrowsException()
         {
             var alwaysFalse = Substitute.For<LifeRuleConditionDelegate>();
             alwaysFalse.Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>()).Returns(false);
             var dummyRule = Substitute.For<LifeRuleDelegate>();
+
             life.AddRule(alwaysFalse, dummyRule);
-            life.CalculateNextState(dummyState);
+
+            life.CalculateNextState(mockState);
         }
 
         [TestMethod]
-        public void GivenDummyStateAndRules_WhenAllAreApplicable_ThenFirstAppliedOnly()
+        public void GivenMockStateAndRules_WhenAllAreApplicable_ThenFirstAppliedOnly()
         {
             var alwaysTrue = Substitute.For<LifeRuleConditionDelegate>();
             alwaysTrue.Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>()).Returns(true);
             var spyRule1 = Substitute.For<LifeRuleDelegate>();
             var spyRule2 = Substitute.For<LifeRuleDelegate>();
+
             life.AddRule(alwaysTrue, spyRule1);
             life.AddRule(alwaysTrue, spyRule2);
 
-            life.CalculateNextState(dummyState);
+            life.CalculateNextState(mockState);
 
-            // ERROR: dummyState will not call the visitors, find another way
             spyRule1.Received().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());
             spyRule2.DidNotReceive().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());
         }
