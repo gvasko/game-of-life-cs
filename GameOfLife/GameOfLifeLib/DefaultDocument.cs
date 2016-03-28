@@ -9,23 +9,40 @@ namespace GameOfLifeLib
 {
     internal class DefaultDocument : IDocument
     {
-        private IFactory factory;
+        private ILife life;
+        private ILifeState initialState;
+        private ILifeState currentState;
 
-        public DefaultDocument(IFactory factory)
+        public DefaultDocument(IFactory factory, ILifeState initialState)
         {
-            this.factory = factory;
-        }
-
-        private CellStatus alma()
-        {
-            return null;
+            life = factory.CreateLife();
+            life.AddRules(factory.GetDefaultRuleSet());
+            this.initialState = initialState;
+            currentState = this.initialState;
         }
 
         public ILifeState CurrentState
         {
             get
             {
-                throw new NotImplementedException();
+                return currentState;
+            }
+            private set
+            {
+                if (currentState != value)
+                {
+                    currentState = value;
+                    Notify();
+                }
+            }
+        }
+
+        private void Notify()
+        {
+            var localHandler = CurrentStateChanged;
+            if (localHandler != null)
+            {
+                localHandler(this, EventArgs.Empty);
             }
         }
 
@@ -33,12 +50,13 @@ namespace GameOfLifeLib
 
         public void NextState()
         {
-            throw new NotImplementedException();
+            CurrentState = life.CalculateNextState(CurrentState);
         }
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            CurrentState = initialState;
         }
+
     }
 }

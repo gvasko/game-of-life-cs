@@ -11,6 +11,7 @@ namespace IGameOfLife
         ILifeState LoadLifeStateFromFile(string path);
         ILifeState CreateLifeState(Cell[] cells);
 
+        LifeRule[] GetDefaultRuleSet();
         ILife CreateLife();
     }
 }

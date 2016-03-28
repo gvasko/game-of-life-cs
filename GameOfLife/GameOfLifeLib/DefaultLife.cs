@@ -36,6 +36,14 @@ namespace GameOfLifeLib
             rules.Add(rule);
         }
 
+        public void AddRules(LifeRule[] rules)
+        {
+            foreach (LifeRule rule in rules)
+            {
+                AddRule(rule);
+            }
+        }
+
         public ILifeState CalculateNextState(ILifeState currentState)
         {
             if (rules.Count == 0)
@@ -80,5 +88,6 @@ namespace GameOfLifeLib
                 throw new InvalidOperationException("Undefined cell status");
             }
         }
+
     }
 }

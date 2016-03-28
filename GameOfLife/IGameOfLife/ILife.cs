@@ -19,6 +19,7 @@ namespace IGameOfLife
     public interface ILife
     {
         void AddRule(LifeRule rule);
+        void AddRules(LifeRule[] rules);
 
         ILifeState CalculateNextState(ILifeState currentState);
     }

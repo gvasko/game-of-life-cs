@@ -32,6 +32,15 @@ namespace GameOfLifeLib
             return new DefaultLifeState(cells);
         }
 
+        public LifeRule[] GetDefaultRuleSet()
+        {
+            return new LifeRule[] {
+                DefaultRules.ApplyUnderPopulationRule,
+                DefaultRules.ApplyNormalPopulationRule,
+                DefaultRules.ApplyOverPopulationRule,
+                DefaultRules.ApplyReproductionRule };
+        }
+
         public ILifeState LoadLifeStateFromFile(string path)
         {
             throw new NotImplementedException();
