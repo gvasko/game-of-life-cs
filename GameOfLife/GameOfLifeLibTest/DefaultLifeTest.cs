@@ -9,30 +9,30 @@ namespace GameOfLifeLibTest
     [TestClass]
     public class DefaultLifeTest
     {
-        private DefaultLife life;
+        private DefaultLife sutLife;
         private ILifeState dummyState;
-        private ILifeState mockLiveState;
-        private ILifeState mockDeadState;
+        private ILifeState stubLiveState;
+        private ILifeState stubDeadState;
         private IFactory spyFactory;
 
         [TestInitialize]
         public void GivenDummyState()
         {
             spyFactory = Substitute.For<IFactory>();
-            life = new DefaultLife(spyFactory);
+            sutLife = new DefaultLife(spyFactory);
             dummyState = Substitute.For<ILifeState>();
 
             var dummyCell = new Cell(0, 0);
 
-            mockLiveState = Substitute.For<ILifeState>();
+            stubLiveState = Substitute.For<ILifeState>();
 
-            mockLiveState
+            stubLiveState
                 .WhenForAnyArgs(s => s.VisitEachCell(Arg.Any<CellStatusVisitorDelegate>()))
                 .Do(s => s.Arg<CellStatusVisitorDelegate>()(dummyCell, CellStatus.Alive));
 
-            mockDeadState = Substitute.For<ILifeState>();
+            stubDeadState = Substitute.For<ILifeState>();
 
-            mockDeadState
+            stubDeadState
                 .WhenForAnyArgs(s => s.VisitEachCell(Arg.Any<CellStatusVisitorDelegate>()))
                 .Do(s => s.Arg<CellStatusVisitorDelegate>()(dummyCell, CellStatus.Dead));
 
@@ -41,18 +41,18 @@ namespace GameOfLifeLibTest
         [TestMethod]
         public void GivenDummyStateAndNoRules_WhenGetNext_ThenReturnsOriginal()
         {
-            ILifeState nextState = life.CalculateNextState(dummyState);
+            ILifeState nextState = sutLife.CalculateNextState(dummyState);
             Assert.AreSame(dummyState, nextState);
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
         public void GivenMockStateAndRules_WhenNothingIsApplicableOnALiveCell_ThenThrowsException()
         {
-            var fakeRule = CreateRuleThatNeverApplicable();
+            var stubRule = CreateRuleThatNeverApplicable();
 
-            life.AddRule(fakeRule);
+            sutLife.AddRule(stubRule);
 
-            life.CalculateNextState(mockLiveState);
+            sutLife.CalculateNextState(stubLiveState);
         }
 
         [TestMethod]
@@ -62,10 +62,10 @@ namespace GameOfLifeLibTest
             var spyRule2 = CreateRuleThatNeverApplicable();
             int liveCellCount = 0;
 
-            life.AddRule(spyRule1);
-            life.AddRule(spyRule2);
+            sutLife.AddRule(spyRule1);
+            sutLife.AddRule(spyRule2);
 
-            life.CalculateNextState(mockDeadState);
+            sutLife.CalculateNextState(stubDeadState);
 
             spyRule1.Received().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());
             spyRule2.Received().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());
@@ -79,10 +79,10 @@ namespace GameOfLifeLibTest
             var spyRule2 = CreateRuleWithConstantStatus(CellStatus.Dead);
             int liveCellCount = 0;
 
-            life.AddRule(spyRule1);
-            life.AddRule(spyRule2);
+            sutLife.AddRule(spyRule1);
+            sutLife.AddRule(spyRule2);
 
-            life.CalculateNextState(mockDeadState);
+            sutLife.CalculateNextState(stubDeadState);
 
             spyRule1.Received().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());
             spyRule2.DidNotReceive().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());

@@ -8,16 +8,13 @@ namespace GameOfLifeLibTest
     [TestClass]
     public class DefaultRulesIntegrationTest
     {
-        private ILife life;
+        private ILife sutLife;
 
         [TestInitialize]
         public void GivenLifeWithDefaultRules()
         {
-            life = DefaultFactory.GetFactory().CreateLife();
-            life.AddRule(DefaultRules.ApplyUnderPopulationRule);
-            life.AddRule(DefaultRules.ApplyNormalPopulationRule);
-            life.AddRule(DefaultRules.ApplyOverPopulationRule);
-            life.AddRule(DefaultRules.ApplyReproductionRule);
+            sutLife = DefaultFactory.GetFactory().CreateLife();
+            sutLife.AddRules(DefaultFactory.GetFactory().GetDefaultRuleSet());
         }
 
         [TestMethod]
@@ -38,7 +35,7 @@ namespace GameOfLifeLibTest
 
             ILifeState expectedSecondState = DefaultFactory.GetFactory().CreateLifeState(Cell.AsCellArray(testData2));
 
-            ILifeState calculatedSecondState = life.CalculateNextState(initialState);
+            ILifeState calculatedSecondState = sutLife.CalculateNextState(initialState);
 
             Assert.AreEqual(expectedSecondState, calculatedSecondState);
 
@@ -49,11 +46,11 @@ namespace GameOfLifeLibTest
 
             ILifeState expectedThirdState = DefaultFactory.GetFactory().CreateLifeState(Cell.AsCellArray(testData3));
 
-            ILifeState calculatedThirdState = life.CalculateNextState(expectedSecondState);
+            ILifeState calculatedThirdState = sutLife.CalculateNextState(expectedSecondState);
 
             Assert.AreEqual(expectedThirdState, calculatedThirdState);
 
-            ILifeState calculatedFourthState = life.CalculateNextState(expectedThirdState);
+            ILifeState calculatedFourthState = sutLife.CalculateNextState(expectedThirdState);
 
             Assert.AreEqual(initialState, calculatedFourthState);
 
