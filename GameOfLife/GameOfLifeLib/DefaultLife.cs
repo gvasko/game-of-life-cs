@@ -9,7 +9,7 @@ namespace GameOfLifeLib
 {
     internal class DefaultLife : ILife
     {
-        private IList<LifeConditionDelegate> orderedConditions;
+        private IList<LifeRule> rules;
         private IFactory factory;
         private ILifeState currentState;
         private IList<Cell> nextLiveCells;
@@ -17,28 +17,28 @@ namespace GameOfLifeLib
         public DefaultLife(IFactory factory)
         {
             this.factory = factory;
-            orderedConditions = new List<LifeConditionDelegate>();
+            rules = new List<LifeRule>();
             nextLiveCells = null;
         }
 
-        public void AddRule(LifeConditionDelegate condition)
+        public void AddRule(LifeRule rule)
         {
-            if (condition == null)
+            if (rule == null)
             {
-                throw new ArgumentNullException("condition");
+                throw new ArgumentNullException("rule");
             }
 
-            if (orderedConditions.Contains(condition))
+            if (rules.Contains(rule))
             {
                 return;
             }
 
-            orderedConditions.Add(condition);
+            rules.Add(rule);
         }
 
         public ILifeState CalculateNextState(ILifeState currentState)
         {
-            if (orderedConditions.Count == 0)
+            if (rules.Count == 0)
             {
                 return currentState;
             }
@@ -59,9 +59,9 @@ namespace GameOfLifeLib
         private void CalculateNextCellStatus(Cell cell, CellStatus status)
         {
             bool processed = false;
-            foreach (LifeConditionDelegate condition in orderedConditions)
+            foreach (LifeRule rule in rules)
             {
-                CellStatus nextStatus = condition(currentState, cell);
+                CellStatus nextStatus = rule(currentState, cell);
 
                 if (nextStatus == null)
                 {

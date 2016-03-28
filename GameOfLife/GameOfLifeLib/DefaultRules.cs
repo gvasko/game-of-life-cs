@@ -17,7 +17,7 @@ namespace GameOfLifeLib
             throw new InvalidOperationException("Internal error: no instances allowed.");
         }
 
-        public static CellStatus ApplyUnderPopulationCondition(ILifeState state, Cell cell)
+        public static CellStatus ApplyUnderPopulationRule(ILifeState state, Cell cell)
         {
             if (state.GetCellStatus(cell) == CellStatus.Alive && 
                 GetLiveNeighboursCount(state, cell) < MinNormalPopulation)
@@ -28,7 +28,7 @@ namespace GameOfLifeLib
             return null;
         }
 
-        public static CellStatus ApplyNormalPopulationCondition(ILifeState state, Cell cell)
+        public static CellStatus ApplyNormalPopulationRule(ILifeState state, Cell cell)
         {
             int liveNeighboursCount = GetLiveNeighboursCount(state, cell);
             if (state.GetCellStatus(cell) == CellStatus.Alive &&
@@ -41,7 +41,7 @@ namespace GameOfLifeLib
             return null;
         }
 
-        public static CellStatus ApplyOverPopulationCondition(ILifeState state, Cell cell)
+        public static CellStatus ApplyOverPopulationRule(ILifeState state, Cell cell)
         {
             if (state.GetCellStatus(cell) == CellStatus.Alive &&
                 GetLiveNeighboursCount(state, cell) > MaxNormalPopulation)
@@ -52,7 +52,7 @@ namespace GameOfLifeLib
             return null;
         }
 
-        public static CellStatus ApplyReproductionCondition(ILifeState state, Cell cell)
+        public static CellStatus ApplyReproductionRule(ILifeState state, Cell cell)
         {
             if (state.GetCellStatus(cell) == CellStatus.Dead &&
                 GetLiveNeighboursCount(state, cell) == MaxNormalPopulation)

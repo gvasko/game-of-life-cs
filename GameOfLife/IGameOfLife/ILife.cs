@@ -7,11 +7,18 @@ using System.Threading.Tasks;
 namespace IGameOfLife
 {
 
-    public delegate CellStatus LifeConditionDelegate(ILifeState state, Cell cell);
+    /// <summary>
+    /// Defines a rule in the game.
+    ///
+    /// </summary>
+    /// <param name="state">The state of the game where to apply the rule </param>
+    /// <param name="cell">The current cell that status needs to be updated</param>
+    /// <returns>The new CellStatus, null if the rule is not applicable</returns>
+    public delegate CellStatus LifeRule(ILifeState state, Cell cell);
 
     public interface ILife
     {
-        void AddRule(LifeConditionDelegate condition);
+        void AddRule(LifeRule rule);
 
         ILifeState CalculateNextState(ILifeState currentState);
     }

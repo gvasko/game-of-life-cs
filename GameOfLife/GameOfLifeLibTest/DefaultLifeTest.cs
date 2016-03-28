@@ -48,9 +48,9 @@ namespace GameOfLifeLibTest
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
         public void GivenMockStateAndRules_WhenNothingIsApplicableOnALiveCell_ThenThrowsException()
         {
-            var fakeCondition = CreateAlwaysFalseCondition();
+            var fakeRule = CreateRuleThatNeverApplicable();
 
-            life.AddRule(fakeCondition);
+            life.AddRule(fakeRule);
 
             life.CalculateNextState(mockLiveState);
         }
@@ -58,47 +58,47 @@ namespace GameOfLifeLibTest
         [TestMethod]
         public void GivenDeadStateAndRules_WhenNothingIsApplicable_ThenNothingHappens()
         {
-            var spyCondition1 = CreateAlwaysFalseCondition();
-            var spyCondition2 = CreateAlwaysFalseCondition();
+            var spyRule1 = CreateRuleThatNeverApplicable();
+            var spyRule2 = CreateRuleThatNeverApplicable();
             int liveCellCount = 0;
 
-            life.AddRule(spyCondition1);
-            life.AddRule(spyCondition2);
+            life.AddRule(spyRule1);
+            life.AddRule(spyRule2);
 
             life.CalculateNextState(mockDeadState);
 
-            spyCondition1.Received().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());
-            spyCondition2.Received().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());
+            spyRule1.Received().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());
+            spyRule2.Received().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());
             spyFactory.Received(1).CreateLifeState(Arg.Is<Cell[]>(cellArray => cellArray.Length == liveCellCount));
         }
 
         [TestMethod]
         public void GivenDeadStateAndRules_WhenAllAreApplicable_ThenFirstAppliedOnly()
         {
-            var spyCondition1 = CreateAlwaysTrueCondition(CellStatus.Dead);
-            var spyCondition2 = CreateAlwaysTrueCondition(CellStatus.Dead);
+            var spyRule1 = CreateRuleWithConstantStatus(CellStatus.Dead);
+            var spyRule2 = CreateRuleWithConstantStatus(CellStatus.Dead);
             int liveCellCount = 0;
 
-            life.AddRule(spyCondition1);
-            life.AddRule(spyCondition2);
+            life.AddRule(spyRule1);
+            life.AddRule(spyRule2);
 
             life.CalculateNextState(mockDeadState);
 
-            spyCondition1.Received().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());
-            spyCondition2.DidNotReceive().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());
+            spyRule1.Received().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());
+            spyRule2.DidNotReceive().Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>());
             spyFactory.Received(1).CreateLifeState(Arg.Is<Cell[]>(cellArray => cellArray.Length == liveCellCount));
         }
 
-        private static LifeConditionDelegate CreateAlwaysTrueCondition(CellStatus result)
+        private static LifeRule CreateRuleWithConstantStatus(CellStatus result)
         {
-            var alwaysTrue = Substitute.For<LifeConditionDelegate>();
+            var alwaysTrue = Substitute.For<LifeRule>();
             alwaysTrue.Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>()).Returns(result);
             return alwaysTrue;
         }
 
-        private static LifeConditionDelegate CreateAlwaysFalseCondition()
+        private static LifeRule CreateRuleThatNeverApplicable()
         {
-            var alwaysFalse = Substitute.For<LifeConditionDelegate>();
+            var alwaysFalse = Substitute.For<LifeRule>();
             CellStatus noResult = null;
             alwaysFalse.Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>()).Returns(noResult);
             return alwaysFalse;
