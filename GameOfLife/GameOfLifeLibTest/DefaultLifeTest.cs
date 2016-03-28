@@ -49,9 +49,8 @@ namespace GameOfLifeLibTest
         public void GivenMockStateAndRules_WhenNothingIsApplicableOnALiveCell_ThenThrowsException()
         {
             var fakeCondition = CreateAlwaysFalseCondition();
-            var fakeConsequence = CellStatus.Alive;
 
-            life.AddRule(fakeCondition, fakeConsequence);
+            life.AddRule(fakeCondition);
 
             life.CalculateNextState(mockLiveState);
         }
@@ -61,11 +60,10 @@ namespace GameOfLifeLibTest
         {
             var spyCondition1 = CreateAlwaysFalseCondition();
             var spyCondition2 = CreateAlwaysFalseCondition();
-            var fakeConsequence = CellStatus.Dead;
             int liveCellCount = 0;
 
-            life.AddRule(spyCondition1, fakeConsequence);
-            life.AddRule(spyCondition2, fakeConsequence);
+            life.AddRule(spyCondition1);
+            life.AddRule(spyCondition2);
 
             life.CalculateNextState(mockDeadState);
 
@@ -77,13 +75,12 @@ namespace GameOfLifeLibTest
         [TestMethod]
         public void GivenDeadStateAndRules_WhenAllAreApplicable_ThenFirstAppliedOnly()
         {
-            var spyCondition1 = CreateAlwaysTrueCondition();
-            var spyCondition2 = CreateAlwaysTrueCondition();
-            var fakeConsequence = CellStatus.Dead;
+            var spyCondition1 = CreateAlwaysTrueCondition(CellStatus.Dead);
+            var spyCondition2 = CreateAlwaysTrueCondition(CellStatus.Dead);
             int liveCellCount = 0;
 
-            life.AddRule(spyCondition1, fakeConsequence);
-            life.AddRule(spyCondition2, fakeConsequence);
+            life.AddRule(spyCondition1);
+            life.AddRule(spyCondition2);
 
             life.CalculateNextState(mockDeadState);
 
@@ -92,17 +89,18 @@ namespace GameOfLifeLibTest
             spyFactory.Received(1).CreateLifeState(Arg.Is<Cell[]>(cellArray => cellArray.Length == liveCellCount));
         }
 
-        private static LifeConditionDelegate CreateAlwaysTrueCondition()
+        private static LifeConditionDelegate CreateAlwaysTrueCondition(CellStatus result)
         {
             var alwaysTrue = Substitute.For<LifeConditionDelegate>();
-            alwaysTrue.Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>()).Returns(true);
+            alwaysTrue.Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>()).Returns(result);
             return alwaysTrue;
         }
 
         private static LifeConditionDelegate CreateAlwaysFalseCondition()
         {
             var alwaysFalse = Substitute.For<LifeConditionDelegate>();
-            alwaysFalse.Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>()).Returns(false);
+            CellStatus noResult = null;
+            alwaysFalse.Invoke(Arg.Any<ILifeState>(), Arg.Any<Cell>()).Returns(noResult);
             return alwaysFalse;
         }
 

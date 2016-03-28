@@ -17,67 +17,50 @@ namespace GameOfLifeLib
             throw new InvalidOperationException("Internal error: no instances allowed.");
         }
 
-        public static bool CheckIfUnderPopulationHappened(ILifeState state, Cell cell)
+        public static CellStatus ApplyUnderPopulationCondition(ILifeState state, Cell cell)
         {
-            if (state.GetCellStatus(cell) == CellStatus.Dead)
+            if (state.GetCellStatus(cell) == CellStatus.Alive && 
+                GetLiveNeighboursCount(state, cell) < MinNormalPopulation)
             {
-                return false;
+                return CellStatus.Dead;
             }
 
-            return GetLiveNeighboursCount(state, cell) < MinNormalPopulation;
+            return null;
         }
 
-        public static CellStatus GetResultOfUnderPopulation()
+        public static CellStatus ApplyNormalPopulationCondition(ILifeState state, Cell cell)
         {
-            return CellStatus.Dead;
-        }
-
-        public static bool CheckIfNormalPopulationHappened(ILifeState state, Cell cell)
-        {
-            if (state.GetCellStatus(cell) == CellStatus.Dead)
-            {
-                return false;
-            }
-
             int liveNeighboursCount = GetLiveNeighboursCount(state, cell);
-            return
+            if (state.GetCellStatus(cell) == CellStatus.Alive &&
                 MinNormalPopulation <= liveNeighboursCount &&
-                liveNeighboursCount <= MaxNormalPopulation;
-        }
-
-        public static CellStatus GetResultOfNormalPopulation()
-        {
-            return CellStatus.Alive;
-        }
-
-        public static bool CheckIfOverPopulationHappened(ILifeState state, Cell cell)
-        {
-            if (state.GetCellStatus(cell) == CellStatus.Dead)
+                liveNeighboursCount <= MaxNormalPopulation)
             {
-                return false;
+                return CellStatus.Alive;
             }
 
-            return GetLiveNeighboursCount(state, cell) > MaxNormalPopulation;
+            return null;
         }
 
-        public static CellStatus GetResultOfOverPopulation()
+        public static CellStatus ApplyOverPopulationCondition(ILifeState state, Cell cell)
         {
-            return CellStatus.Dead;
-        }
-
-        public static bool CheckIfReproductionHappened(ILifeState state, Cell cell)
-        {
-            if (state.GetCellStatus(cell) == CellStatus.Alive)
+            if (state.GetCellStatus(cell) == CellStatus.Alive &&
+                GetLiveNeighboursCount(state, cell) > MaxNormalPopulation)
             {
-                return false;
+                return CellStatus.Dead;
             }
 
-            return GetLiveNeighboursCount(state, cell) == MaxNormalPopulation;
+            return null;
         }
 
-        public static CellStatus GetResultOfReproduction()
+        public static CellStatus ApplyReproductionCondition(ILifeState state, Cell cell)
         {
-            return CellStatus.Alive;
+            if (state.GetCellStatus(cell) == CellStatus.Dead &&
+                GetLiveNeighboursCount(state, cell) == MaxNormalPopulation)
+            {
+                return CellStatus.Alive;
+            }
+
+            return null;
         }
 
         private static int GetLiveNeighboursCount(ILifeState state, Cell cell)
@@ -90,6 +73,7 @@ namespace GameOfLifeLib
                     liveNeighboursCount++;
                 }
             });
+
             return liveNeighboursCount;
         }
 

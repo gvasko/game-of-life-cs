@@ -9,7 +9,6 @@ namespace GameOfLifeLib
 {
     internal class DefaultLife : ILife
     {
-        private IDictionary<LifeConditionDelegate, CellStatus> consequences;
         private IList<LifeConditionDelegate> orderedConditions;
         private IFactory factory;
         private ILifeState currentState;
@@ -18,24 +17,22 @@ namespace GameOfLifeLib
         public DefaultLife(IFactory factory)
         {
             this.factory = factory;
-            consequences = new Dictionary<LifeConditionDelegate, CellStatus>();
             orderedConditions = new List<LifeConditionDelegate>();
             nextLiveCells = null;
         }
 
-        public void AddRule(LifeConditionDelegate condition, CellStatus consequence)
+        public void AddRule(LifeConditionDelegate condition)
         {
             if (condition == null)
             {
                 throw new ArgumentNullException("condition");
             }
 
-            if (consequences.ContainsKey(condition))
+            if (orderedConditions.Contains(condition))
             {
                 return;
             }
 
-            consequences[condition] = consequence;
             orderedConditions.Add(condition);
         }
 
@@ -64,16 +61,19 @@ namespace GameOfLifeLib
             bool processed = false;
             foreach (LifeConditionDelegate condition in orderedConditions)
             {
-                if (condition(currentState, cell))
+                CellStatus nextStatus = condition(currentState, cell);
+
+                if (nextStatus == null)
                 {
-                    CellStatus nextStatus = consequences[condition];
-                    if (nextStatus == CellStatus.Alive)
-                    {
-                        nextLiveCells.Add(cell);
-                    }
-                    processed = true;
-                    break;
+                    continue;
                 }
+
+                if (nextStatus == CellStatus.Alive)
+                {
+                    nextLiveCells.Add(cell);
+                }
+                processed = true;
+                break;
             }
             if (!processed && status == CellStatus.Alive)
             {

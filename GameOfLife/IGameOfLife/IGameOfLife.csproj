@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CellStatus.cs" />
     <Compile Include="IDocument.cs" />
     <Compile Include="IFactory.cs" />
     <Compile Include="ILife.cs" />

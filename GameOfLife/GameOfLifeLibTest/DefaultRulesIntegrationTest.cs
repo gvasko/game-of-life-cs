@@ -14,10 +14,10 @@ namespace GameOfLifeLibTest
         public void GivenLifeWithDefaultRules()
         {
             life = DefaultFactory.GetFactory().CreateLife();
-            life.AddRule(DefaultRules.CheckIfUnderPopulationHappened, DefaultRules.GetResultOfUnderPopulation());
-            life.AddRule(DefaultRules.CheckIfNormalPopulationHappened, DefaultRules.GetResultOfNormalPopulation());
-            life.AddRule(DefaultRules.CheckIfOverPopulationHappened, DefaultRules.GetResultOfOverPopulation());
-            life.AddRule(DefaultRules.CheckIfReproductionHappened, DefaultRules.GetResultOfReproduction());
+            life.AddRule(DefaultRules.ApplyUnderPopulationCondition);
+            life.AddRule(DefaultRules.ApplyNormalPopulationCondition);
+            life.AddRule(DefaultRules.ApplyOverPopulationCondition);
+            life.AddRule(DefaultRules.ApplyReproductionCondition);
         }
 
         [TestMethod]

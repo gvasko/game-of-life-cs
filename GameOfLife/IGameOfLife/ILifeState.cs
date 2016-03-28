@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 namespace IGameOfLife
 {
 
-    public enum CellStatus { Alive, Dead };
-
     public struct Cell
     {
         public static Cell[] AsCellArray(int[,] intArray)
