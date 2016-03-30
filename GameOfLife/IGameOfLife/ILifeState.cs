@@ -26,6 +26,18 @@ namespace IGameOfLife
             this.y = y;
         }
 
+        public static int Comparison(Cell a, Cell b)
+        {
+            if (a.y != b.y)
+            {
+                return a.y - b.y;
+            }
+            else
+            {
+                return a.x - b.x;
+            }
+        }
+
         private int x;
         public int X { get { return x; } }
 
@@ -35,6 +47,11 @@ namespace IGameOfLife
         public override string ToString()
         {
             return string.Format("({0}, {1})", X, Y);
+        }
+
+        public override int GetHashCode()
+        {
+            return (17 * 23 + x) * 23 + y;
         }
     }
 

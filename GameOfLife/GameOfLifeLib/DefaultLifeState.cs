@@ -10,13 +10,25 @@ namespace GameOfLifeLib
 
     internal class DefaultLifeState : ILifeState
     {
-        private Cell[] liveCells;
+        private HashSet<Cell> liveCells;
+        private Cell[] originalCells;
         private BoundingBox boundingBox;
 
         internal DefaultLifeState(Cell[] liveCells)
         {
-            this.liveCells = new HashSet<Cell>(liveCells).ToArray();
-            boundingBox = new BoundingBox(this.liveCells);
+            this.liveCells = new HashSet<Cell>();
+            List<Cell> cellsWithoutDuplication = new List<Cell>();
+            foreach (Cell liveCell in liveCells)
+            {
+                if (!this.liveCells.Contains(liveCell))
+                {
+                    this.liveCells.Add(liveCell);
+                    cellsWithoutDuplication.Add(liveCell);
+                }
+            }
+            cellsWithoutDuplication.Sort(Cell.Comparison);
+            originalCells = cellsWithoutDuplication.ToArray();
+            boundingBox = new BoundingBox(originalCells);
         }
 
         public BoundingBox BoundingBox
@@ -27,17 +39,13 @@ namespace GameOfLifeLib
             }
         }
 
-        // TODO: bottleneck, slow
         public CellStatus GetCellStatus(Cell cell)
         {
             if (BoundingBox.IsInside(cell))
             {
-                foreach (Cell alive in liveCells)
+                if (liveCells.Contains(cell))
                 {
-                    if (alive.Equals(cell))
-                    {
-                        return CellStatus.Alive;
-                    }
+                    return CellStatus.Alive;
                 }
             }
             return CellStatus.Dead;
@@ -89,7 +97,7 @@ namespace GameOfLifeLib
                 return false;
             }
 
-            if (this.liveCells.Length != that.liveCells.Length)
+            if (this.liveCells.Count != that.liveCells.Count)
             {
                 return false;
             }
@@ -108,7 +116,7 @@ namespace GameOfLifeLib
         public override int GetHashCode()
         {
             int hash = 17;
-            foreach (Cell cell in liveCells)
+            foreach (Cell cell in originalCells)
             {
                 hash = hash * 23 + cell.GetHashCode();
             }
