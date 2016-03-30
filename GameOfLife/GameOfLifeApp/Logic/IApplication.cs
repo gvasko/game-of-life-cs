@@ -22,6 +22,8 @@ namespace GameOfLifeApp.Logic
 
         event EventHandler FileChanged;
 
+        bool GridEnabled { get; set; }
+
         void ProcessCommandLineArguments(string[] args);
 
         void NextImage();

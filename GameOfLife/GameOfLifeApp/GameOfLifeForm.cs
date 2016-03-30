@@ -27,6 +27,7 @@ namespace GameOfLifeApp
             appLogic.CellSize = DefaultCellSize;
             picture.DataBindings.Add("Image", appLogic, "Image");
             cellSizeComboBox.TextChanged += cellSizeComboBox_Changed;
+            gridButton.CheckedChanged += gridButton_Chenged;
         }
 
         private void openFileButton_Click(object sender, EventArgs e)
@@ -72,5 +73,12 @@ namespace GameOfLifeApp
 
             appLogic.CellSize = newCellSize;
         }
+
+        private void gridButton_Chenged(object sender, EventArgs e)
+        {
+            appLogic.GridEnabled = gridButton.Checked;
+        }
+
+
     }
 }

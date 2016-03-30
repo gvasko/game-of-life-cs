@@ -12,8 +12,8 @@ namespace GameOfLifeApp.Logic
     {
         bool GridEnabled { get; set; }
 
-        Color GridColor { get; set; }
-        Color CellColor { get; set; }
+        Pen GridPen { get; set; }
+        Brush CellBrush { get; set; }
         Color BackgroundColor { get; set; }
 
         int CellSize { get; set; }

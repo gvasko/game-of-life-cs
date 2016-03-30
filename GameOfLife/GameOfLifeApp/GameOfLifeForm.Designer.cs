@@ -37,6 +37,7 @@
             this.cellSizeComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.cellSizeLabel = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.gridButton = new System.Windows.Forms.ToolStripButton();
             this.toolBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picture)).BeginInit();
             this.SuspendLayout();
@@ -48,6 +49,7 @@
             this.openFileButton,
             this.nextStateButton,
             this.resetButton,
+            this.gridButton,
             this.toolStripSeparator1,
             this.cellSizeLabel,
             this.cellSizeComboBox});
@@ -124,6 +126,16 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
+            // gridButton
+            // 
+            this.gridButton.CheckOnClick = true;
+            this.gridButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.gridButton.Image = ((System.Drawing.Image)(resources.GetObject("gridButton.Image")));
+            this.gridButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.gridButton.Name = "gridButton";
+            this.gridButton.Size = new System.Drawing.Size(33, 22);
+            this.gridButton.Text = "Grid";
+            // 
             // GameOfLifeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -153,6 +165,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripLabel cellSizeLabel;
         private System.Windows.Forms.ToolStripComboBox cellSizeComboBox;
+        private System.Windows.Forms.ToolStripButton gridButton;
     }
 }
 

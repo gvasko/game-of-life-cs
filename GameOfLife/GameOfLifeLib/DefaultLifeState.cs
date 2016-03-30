@@ -27,6 +27,7 @@ namespace GameOfLifeLib
             }
         }
 
+        // TODO: bottleneck, slow
         public CellStatus GetCellStatus(Cell cell)
         {
             if (BoundingBox.IsInside(cell))

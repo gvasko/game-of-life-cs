@@ -18,6 +18,7 @@ namespace GameOfLifeApp.Logic
         private Image logo;
         private int cellSize;
         private string file;
+        private bool gridEnabled;
 
         public DefaultApplication(IAppFactory factory)
         {
@@ -28,6 +29,7 @@ namespace GameOfLifeApp.Logic
             image = logo;
             cellSize = 1;
             file = string.Empty;
+            gridEnabled = false;
         }
 
         public int CellSize
@@ -79,6 +81,24 @@ namespace GameOfLifeApp.Logic
                 {
                     image = value;
                     NotifyObservers(ImageChanged);
+                }
+            }
+        }
+
+        public bool GridEnabled
+        {
+            get
+            {
+                return gridEnabled;
+            }
+
+            set
+            {
+                if (gridEnabled != value)
+                {
+                    gridEnabled = value;
+                    imageBuilder.GridEnabled = value;
+                    UpdateImage();
                 }
             }
         }

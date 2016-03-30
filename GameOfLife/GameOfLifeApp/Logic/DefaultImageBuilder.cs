@@ -11,17 +11,26 @@ namespace GameOfLifeApp.Logic
 {
     class DefaultImageBuilder : IImageBuilder
     {
+
+        public DefaultImageBuilder()
+        {
+            BackgroundColor = Color.WhiteSmoke;
+            CellBrush = Brushes.SteelBlue;
+            GridPen = Pens.Silver;
+            CellSize = 1;
+        }
+
         public Color BackgroundColor
         {
             get; set;
         }
 
-        public Color CellColor
+        public Brush CellBrush
         {
             get; set;
         }
 
-        public Color GridColor
+        public Pen GridPen
         {
             get; set;
         }
@@ -44,14 +53,30 @@ namespace GameOfLifeApp.Logic
 
             using (Graphics g = Graphics.FromImage(image))
             {
-                g.Clear(Color.White);
+                g.Clear(BackgroundColor);
 
-                g.TranslateTransform(-(state.BoundingBox.MinPoint.X - 1) * CellSize, -(state.BoundingBox.MinPoint.Y - 1) * CellSize);
+                int minX = state.BoundingBox.MinPoint.X;
+                int minY = state.BoundingBox.MinPoint.Y;
+                g.TranslateTransform(-(minX - 1) * CellSize, -(minY - 1) * CellSize);
 
                 state.VisitLiveCells((Cell cell, CellStatus status) =>
                 {
-                    g.FillRectangle(Brushes.Black, cell.X * CellSize, cell.Y * CellSize, CellSize, CellSize);
+                    g.FillRectangle(CellBrush, cell.X * CellSize, cell.Y * CellSize, CellSize, CellSize);
                 });
+
+                if (GridEnabled)
+                {
+                    int maxX = state.BoundingBox.MaxPoint.X;
+                    int maxY = state.BoundingBox.MaxPoint.Y;
+                    for (int x = state.BoundingBox.MinPoint.X; x <= state.BoundingBox.MaxPoint.X + 1; x++)
+                    {
+                        g.DrawLine(GridPen, x * CellSize, minY * CellSize, x * CellSize, (maxY + 1) * CellSize);
+                    }
+                    for (int y = state.BoundingBox.MinPoint.Y; y <= state.BoundingBox.MaxPoint.Y + 1; y++)
+                    {
+                        g.DrawLine(GridPen, minX * CellSize, y * CellSize, (maxX + 1) * CellSize, y * CellSize);
+                    }
+                }
             }
 
             return image;
