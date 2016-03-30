@@ -13,4 +13,3 @@ after_build:
 artifacts:
     - path: GameOfLife.zip
       name: GameOfLife
-	  
