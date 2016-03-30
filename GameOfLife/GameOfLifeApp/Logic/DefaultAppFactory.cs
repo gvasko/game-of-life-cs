@@ -6,11 +6,26 @@ using System.Text;
 using System.Threading.Tasks;
 using IGameOfLife;
 using System.IO;
+using GameOfLifeLib;
 
 namespace GameOfLifeApp.Logic
 {
-    public class DefaultAppFactory : IAppFactory
+    public sealed class DefaultAppFactory : IAppFactory
     {
+        private static DefaultAppFactory factorySoleInstance;
+
+        public static DefaultAppFactory GetFactory()
+        {
+            // TODO: not thread safe
+            if (factorySoleInstance == null)
+            {
+                // TODO: tight coupling
+                factorySoleInstance = new DefaultAppFactory(DefaultDocFactory.GetFactory());
+            }
+
+            return factorySoleInstance;
+        }
+
         private IDocFactory docFactory;
 
         public DefaultAppFactory(IDocFactory docFactory)
@@ -20,7 +35,7 @@ namespace GameOfLifeApp.Logic
 
         public Image CreateLogo()
         {
-            throw new NotImplementedException();
+            return Properties.Resources.Logo;
         }
 
         public IDocument LoadFile(string path)
@@ -35,12 +50,12 @@ namespace GameOfLifeApp.Logic
 
         public IImageBuilder CreateImageBuilder()
         {
-            throw new NotImplementedException();
+            return new DefaultImageBuilder();
         }
 
         public IApplication CreateApplicationLogic()
         {
-            throw new NotImplementedException();
+            return new DefaultApplication(this);
         }
     }
 }

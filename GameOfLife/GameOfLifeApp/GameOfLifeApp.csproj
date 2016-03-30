@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="Logic\DefaultAppFactory.cs" />
     <Compile Include="Logic\DefaultApplication.cs" />
+    <Compile Include="Logic\DefaultImageBuilder.cs" />
     <Compile Include="Logic\IAppFactory.cs" />
     <Compile Include="Logic\IApplication.cs" />
     <Compile Include="Logic\IImageBuilder.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -93,6 +95,9 @@
       <Project>{bea08771-3b8b-4483-87e8-ca132690aca5}</Project>
       <Name>IGameOfLife</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

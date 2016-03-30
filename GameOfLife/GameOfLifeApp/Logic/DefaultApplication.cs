@@ -39,9 +39,13 @@ namespace GameOfLifeApp.Logic
 
             set
             {
-                cellSize = value;
-                imageBuilder.CellSize = value;
-                NotifyObservers(CellSizeChanged);
+                if (cellSize != value)
+                {
+                    cellSize = value;
+                    imageBuilder.CellSize = value;
+                    NotifyObservers(CellSizeChanged);
+                    UpdateImage();
+                }
             }
         }
 
@@ -54,9 +58,12 @@ namespace GameOfLifeApp.Logic
 
             set
             {
-                IDocument newDoc = LoadNewDoc(value);
-                DetachFromOldDocument();
-                AttachToNewDocument(value, newDoc);
+                if (file != value)
+                {
+                    IDocument newDoc = LoadNewDoc(value);
+                    DetachFromOldDocument();
+                    AttachToNewDocument(value, newDoc);
+                }
             }
         }
 
@@ -68,8 +75,11 @@ namespace GameOfLifeApp.Logic
             }
             private set
             {
-                image = value;
-                NotifyObservers(ImageChanged);
+                if (image != value)
+                {
+                    image = value;
+                    NotifyObservers(ImageChanged);
+                }
             }
         }
 

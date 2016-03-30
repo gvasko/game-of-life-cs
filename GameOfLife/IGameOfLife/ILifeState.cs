@@ -51,8 +51,16 @@ namespace IGameOfLife
 
         public BoundingBox(Cell[] cells)
         {
-            minPoint = new Cell(cells.Select(c => c.X).Min(), cells.Select(c => c.Y).Min());
-            maxPoint = new Cell(cells.Select(c => c.X).Max(), cells.Select(c => c.Y).Max());
+            if (cells.Length == 0)
+            {
+                minPoint = new Cell(0, 0);
+                maxPoint = new Cell(0, 0);
+            }
+            else
+            {
+                minPoint = new Cell(cells.Select(c => c.X).Min(), cells.Select(c => c.Y).Min());
+                maxPoint = new Cell(cells.Select(c => c.X).Max(), cells.Select(c => c.Y).Max());
+            }
         }
 
         private Cell minPoint;
@@ -60,6 +68,9 @@ namespace IGameOfLife
 
         private Cell maxPoint;
         public Cell MaxPoint { get { return maxPoint; } }
+
+        public int Width { get { return maxPoint.X - minPoint.X + 1; } }
+        public int Height { get { return maxPoint.Y - minPoint.Y + 1; } }
 
         public bool IsInside(Cell cell)
         {
@@ -70,9 +81,9 @@ namespace IGameOfLife
 
         public void VisitEachCell(CellVisitorDelegate visitor)
         {
-            for (int x = MinPoint.X; x <= MaxPoint.X; x++)
+            for (int x = MinPoint.X - 1; x <= MaxPoint.X + 1; x++)
             {
-                for (int y = MinPoint.Y; y <= MaxPoint.Y; y++)
+                for (int y = MinPoint.Y - 1; y <= MaxPoint.Y + 1; y++)
                 {
                     Cell currentCell = new Cell(x, y);
                     visitor(currentCell);

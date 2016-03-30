@@ -1,6 +1,7 @@
 ﻿using IGameOfLife;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace GameOfLifeLib
     {
         private static DefaultDocFactory factorySoleInstance;
 
-        public static IDocFactory GetFactory()
+        public static DefaultDocFactory GetFactory()
         {
             // TODO: not thread safe
             if (factorySoleInstance == null)
@@ -20,6 +21,11 @@ namespace GameOfLifeLib
             }
 
             return factorySoleInstance;
+        }
+
+        private DefaultDocFactory()
+        {
+            // make it private
         }
 
         public IDocument CreateDocument(ILifeState initialState)
@@ -46,9 +52,35 @@ namespace GameOfLifeLib
                 DefaultRules.ApplyReproductionRule };
         }
 
+        // TODO: untested code
         public ILifeState LoadLifeStateFromFile(string path)
         {
-            throw new NotImplementedException();
+            string[] lines = File.ReadAllLines(path);
+            IList<Cell> cells = new List<Cell>();
+            foreach (string line in lines)
+            {
+                string trimmedLine = line.Trim();
+                if (trimmedLine.StartsWith("#"))
+                {
+                    continue;
+                }
+                string[] components = trimmedLine.Split(' ');
+                if (components.Length == 2)
+                {
+                    try
+                    {
+                        int x = Int32.Parse(components[0]);
+                        int y = Int32.Parse(components[1]);
+                        cells.Add(new Cell(x, y));
+                    }
+                    catch (FormatException)
+                    {
+                        continue;
+                    }
+                }
+            }
+
+            return CreateLifeState(cells.ToArray());
         }
     }
 }
