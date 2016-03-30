@@ -6,3 +6,11 @@ configuration: Release
 
 before_build:
     - nuget restore GameOfLife\GameOfLife.sln -verbosity detailed
+
+after_build:
+    - 7z a GameOfLife.zip %APPVEYOR_BUILD_FOLDER%\GameOfLife\GameOfLifeApp\bin\Release\*.*
+
+artifacts:
+    - path: GameOfLife.zip
+      name: GameOfLife
+	  
