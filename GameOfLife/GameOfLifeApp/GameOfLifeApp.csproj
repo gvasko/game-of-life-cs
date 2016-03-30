@@ -52,6 +52,9 @@
     <Compile Include="GameOfLifeForm.Designer.cs">
       <DependentUpon>GameOfLifeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logic\DefaultAppFactory.cs" />
+    <Compile Include="Logic\DefaultApplication.cs" />
+    <Compile Include="Logic\IAppFactory.cs" />
     <Compile Include="Logic\IApplication.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,6 +87,10 @@
     <ProjectReference Include="..\GameOfLifeLib\GameOfLifeLib.csproj">
       <Project>{6f296486-7a5c-4198-a441-7a766358e728}</Project>
       <Name>GameOfLifeLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IGameOfLife\IGameOfLife.csproj">
+      <Project>{bea08771-3b8b-4483-87e8-ca132690aca5}</Project>
+      <Name>IGameOfLife</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

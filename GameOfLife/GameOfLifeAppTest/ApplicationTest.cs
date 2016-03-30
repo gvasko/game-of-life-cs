@@ -6,7 +6,7 @@ namespace GameOfLifeAppTest
     [TestClass]
     public class ApplicationTest
     {
-        [TestMethod]
+        [TestMethod, Ignore]
         public void TestPrimaryScenario()
         {
             // GameOfLifeMockView mockApp = new ...

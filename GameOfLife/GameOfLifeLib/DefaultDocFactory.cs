@@ -7,19 +7,24 @@ using System.Threading.Tasks;
 
 namespace GameOfLifeLib
 {
-    public sealed class DefaultFactory : IFactory
+    public sealed class DefaultDocFactory : IDocFactory
     {
-        private static DefaultFactory factorySoleInstance;
+        private static DefaultDocFactory factorySoleInstance;
 
-        public static IFactory GetFactory()
+        public static IDocFactory GetFactory()
         {
             // TODO: not thread safe
             if (factorySoleInstance == null)
             {
-                factorySoleInstance = new DefaultFactory();
+                factorySoleInstance = new DefaultDocFactory();
             }
 
             return factorySoleInstance;
+        }
+
+        public IDocument CreateDocument(ILifeState initialState)
+        {
+            return new DefaultDocument(this, initialState);
         }
 
         public ILife CreateLife()

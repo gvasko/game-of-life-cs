@@ -24,7 +24,7 @@ namespace GameOfLifeLibTest
             var stubLife = Substitute.For<ILife>();
             stubLife.CalculateNextState(Arg.Is<ILifeState>(dummyInitialLifeState)).Returns(dummySecondLifeState);
 
-            var stubFactory = Substitute.For<IFactory>();
+            var stubFactory = Substitute.For<IDocFactory>();
             stubFactory.CreateLife().Returns(stubLife);
 
             sutDocument = new DefaultDocument(stubFactory, dummyInitialLifeState);

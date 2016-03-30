@@ -10,11 +10,11 @@ namespace GameOfLifeLib
     internal class DefaultLife : ILife
     {
         private IList<LifeRule> rules;
-        private IFactory factory;
+        private IDocFactory factory;
         private ILifeState currentState;
         private IList<Cell> nextLiveCells;
 
-        public DefaultLife(IFactory factory)
+        public DefaultLife(IDocFactory factory)
         {
             this.factory = factory;
             rules = new List<LifeRule>();

@@ -13,7 +13,7 @@ namespace GameOfLifeLib
         private ILifeState initialState;
         private ILifeState currentState;
 
-        public DefaultDocument(IFactory factory, ILifeState initialState)
+        public DefaultDocument(IDocFactory factory, ILifeState initialState)
         {
             life = factory.CreateLife();
             life.AddRules(factory.GetDefaultRuleSet());

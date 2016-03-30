@@ -8,13 +8,17 @@ using System.Threading.Tasks;
 
 namespace GameOfLifeApp.Logic
 {
-    interface IApplication
+    public interface IApplication
     {
         Image Image { get; }
 
         event EventHandler ImageChanged;
 
-        File File { get; set; }
+        int CellSize { get; set; }
+
+        event EventHandler CellSizeChanged;
+
+        string File { get; set; }
 
         event EventHandler FileChanged;
 

@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 
 namespace IGameOfLife
 {
-    public interface IFactory
+    public interface IDocFactory
     {
         ILifeState LoadLifeStateFromFile(string path);
         ILifeState CreateLifeState(Cell[] cells);
 
         LifeRule[] GetDefaultRuleSet();
+
         ILife CreateLife();
+
+        IDocument CreateDocument(ILifeState initialState);
+
     }
 }

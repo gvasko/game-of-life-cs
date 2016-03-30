@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="CellStatus.cs" />
     <Compile Include="IDocument.cs" />
-    <Compile Include="IFactory.cs" />
+    <Compile Include="IDocFactory.cs" />
     <Compile Include="ILife.cs" />
     <Compile Include="ILifeState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

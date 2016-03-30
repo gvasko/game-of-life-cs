@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultDocument.cs" />
-    <Compile Include="DefaultFactory.cs" />
+    <Compile Include="DefaultDocFactory.cs" />
     <Compile Include="DefaultLife.cs" />
     <Compile Include="DefaultLifeState.cs" />
     <Compile Include="DefaultRules.cs" />

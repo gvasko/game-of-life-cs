@@ -13,8 +13,8 @@ namespace GameOfLifeLibTest
         [TestInitialize]
         public void GivenLifeWithDefaultRules()
         {
-            sutLife = DefaultFactory.GetFactory().CreateLife();
-            sutLife.AddRules(DefaultFactory.GetFactory().GetDefaultRuleSet());
+            sutLife = DefaultDocFactory.GetFactory().CreateLife();
+            sutLife.AddRules(DefaultDocFactory.GetFactory().GetDefaultRuleSet());
         }
 
         [TestMethod]
@@ -26,14 +26,14 @@ namespace GameOfLifeLibTest
                 { 1, -1 }, { -4, 0 }, { 1, 0 }, { 3, 0 }, { 4, 0 }, { -3, 1 }, { -2, 1 }, { -1, 1 },
                 { 1, 1 }, { 3, 1 }, { 4, 1 }, { 0, 2 }, { -1, 3 }, { -1, 4 }, { 0, 4 } };
 
-            ILifeState initialState = DefaultFactory.GetFactory().CreateLifeState(Cell.AsCellArray(testData1));
+            ILifeState initialState = DefaultDocFactory.GetFactory().CreateLifeState(Cell.AsCellArray(testData1));
 
             int[,] testData2 = new int[,] { { -3, -4 }, { -2, -4 }, { -5, -3 }, { -2, -3 },
                 { -5, -2 }, { -4, -2 }, { -2, -2 }, { 0, -2 }, { 1, -2 }, { -4, -1 }, { -1, -1 },
                 { 1, -1 }, { -4, 0 }, { -1, 0 }, { 1, 0 }, { 3, 0 }, { 4, 0 }, { -3, 1 }, { -2, 1 }, { -1, 1 },
                 { 1, 1 }, { 3, 1 }, { 4, 1 }, { 0, 2 }, { -1, 3 }, { -1, 4 }, { 0, 4 } };
 
-            ILifeState expectedSecondState = DefaultFactory.GetFactory().CreateLifeState(Cell.AsCellArray(testData2));
+            ILifeState expectedSecondState = DefaultDocFactory.GetFactory().CreateLifeState(Cell.AsCellArray(testData2));
 
             ILifeState calculatedSecondState = sutLife.CalculateNextState(initialState);
 
@@ -44,7 +44,7 @@ namespace GameOfLifeLibTest
                 { 1, -1 }, { -4, 0 }, { -1, 0 }, { 1, 0 }, { 3, 0 }, { 4, 0 }, { -3, 1 }, { -2, 1 }, { -1, 1 },
                 { 1, 1 }, { 3, 1 }, { 4, 1 }, { 0, 2 }, { -1, 3 }, { -1, 4 }, { 0, 4 } };
 
-            ILifeState expectedThirdState = DefaultFactory.GetFactory().CreateLifeState(Cell.AsCellArray(testData3));
+            ILifeState expectedThirdState = DefaultDocFactory.GetFactory().CreateLifeState(Cell.AsCellArray(testData3));
 
             ILifeState calculatedThirdState = sutLife.CalculateNextState(expectedSecondState);
 

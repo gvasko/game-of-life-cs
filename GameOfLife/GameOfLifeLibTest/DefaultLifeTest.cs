@@ -13,12 +13,12 @@ namespace GameOfLifeLibTest
         private ILifeState dummyState;
         private ILifeState stubLiveState;
         private ILifeState stubDeadState;
-        private IFactory spyFactory;
+        private IDocFactory spyFactory;
 
         [TestInitialize]
         public void GivenDummyState()
         {
-            spyFactory = Substitute.For<IFactory>();
+            spyFactory = Substitute.For<IDocFactory>();
             sutLife = new DefaultLife(spyFactory);
             dummyState = Substitute.For<ILifeState>();
 
