@@ -18,25 +18,37 @@ namespace GameOfLifeAppTest.Logic
         private IDocument spyDocument;
         private Image dummyLogo;
         private EventHandler spyImageEventHandler;
+        private IImageBuilder stubImageBuilder;
 
         [TestInitialize]
         public void GivenNewApp()
         {
             spyDocument = Substitute.For<IDocument>();
+            spyDocument.When(doc => doc.NextState()).Do(RaiseStateChangeEvent());
+            spyDocument.When(doc => doc.Reset()).Do(RaiseStateChangeEvent());
 
             dummyExistingFile = "existing file";
             dummyNotExistingFile = "not existing file";
-            dummyLogo = Substitute.For<Image>();
+            dummyLogo = new Bitmap(1, 1);
 
             spyFactory = Substitute.For<IAppFactory>();
             spyFactory.LoadFile(Arg.Is<string>(dummyExistingFile)).Returns(spyDocument);
-            spyFactory.When(f => f.LoadFile(Arg.Is<string>(dummyNotExistingFile))).Do(f => { throw new FileNotFoundException(); });
+            spyFactory.When(factory => factory.LoadFile(Arg.Is<string>(dummyNotExistingFile))).Do(f => { throw new FileNotFoundException(); });
             spyFactory.CreateLogo().Returns(dummyLogo);
+
+            stubImageBuilder = Substitute.For<IImageBuilder>();
+            stubImageBuilder.AsImage(Arg.Any<ILifeState>()).Returns(x => { return new Bitmap(1, 1); });
+            spyFactory.CreateImageBuilder().Returns(stubImageBuilder);
 
             sutApp = new DefaultApplication(spyFactory);
 
             spyImageEventHandler = Substitute.For<EventHandler>();
             sutApp.ImageChanged += spyImageEventHandler;
+        }
+
+        private Action<NSubstitute.Core.CallInfo> RaiseStateChangeEvent()
+        {
+            return x => spyDocument.CurrentStateChanged += Raise.EventWith(spyDocument, EventArgs.Empty);
         }
 
         [TestMethod]
@@ -62,15 +74,18 @@ namespace GameOfLifeAppTest.Logic
         public void GivenNewApp_WhenFileNotFound_ThenImageRemainAndThrowsException()
         {
             var initialImage = sutApp.Image;
+            bool exceptionThrown = false;
 
             try
             {
                 sutApp.File = dummyNotExistingFile;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Assert.AreEqual(typeof(FileNotFoundException), e.GetType());
+                exceptionThrown = true;
             }
+
+            Assert.IsTrue(exceptionThrown);
 
             spyImageEventHandler.DidNotReceive().Invoke(Arg.Any<object>(), Arg.Any<EventArgs>());
 
@@ -93,23 +108,20 @@ namespace GameOfLifeAppTest.Logic
             var initialImage = sutApp.Image;
 
             sutApp.File = dummyExistingFile;
+            sutApp.NextImage();
 
-            spyImageEventHandler.Received(1).Invoke(Arg.Is<object>(sutApp), Arg.Any<EventArgs>());
+            spyImageEventHandler.Received(2).Invoke(Arg.Is<object>(sutApp), Arg.Any<EventArgs>());
 
             Assert.AreNotSame(initialImage, sutApp.Image);
         }
 
         [TestMethod]
-        public void GivenNewApp_WhenFileLoadedAndReset_ThenImageUpdated()
+        public void GivenNewApp_WhenFileLoadedNextAndReset_ThenImageUpdated()
         {
-            var initialImage = sutApp.Image;
-
             sutApp.File = dummyExistingFile;
             sutApp.ResetImage();
 
             spyImageEventHandler.Received(2).Invoke(Arg.Is<object>(sutApp), Arg.Any<EventArgs>());
-
-            Assert.AreSame(initialImage, sutApp.Image);
         }
 
         [TestMethod]

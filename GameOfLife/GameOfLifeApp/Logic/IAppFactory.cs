@@ -14,5 +14,8 @@ namespace GameOfLifeApp.Logic
 
         IDocument LoadFile(string path);
 
+        IImageBuilder CreateImageBuilder();
+
+        IApplication CreateApplicationLogic();
     }
 }

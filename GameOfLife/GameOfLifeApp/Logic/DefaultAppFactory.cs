@@ -32,5 +32,15 @@ namespace GameOfLifeApp.Logic
 
             return docFactory.CreateDocument(docFactory.LoadLifeStateFromFile(path));
         }
+
+        public IImageBuilder CreateImageBuilder()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IApplication CreateApplicationLogic()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

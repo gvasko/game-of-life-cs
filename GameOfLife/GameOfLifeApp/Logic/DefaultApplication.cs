@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IGameOfLife;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -11,22 +12,36 @@ namespace GameOfLifeApp.Logic
     internal class DefaultApplication : IApplication
     {
         private IAppFactory factory;
+        private IDocument document;
+        private IImageBuilder imageBuilder;
+        private Image image;
+        private Image logo;
+        private int cellSize;
+        private string file;
 
         public DefaultApplication(IAppFactory factory)
         {
             this.factory = factory;
+            document = null;
+            imageBuilder = factory.CreateImageBuilder();
+            logo = factory.CreateLogo();
+            image = logo;
+            cellSize = 1;
+            file = string.Empty;
         }
 
         public int CellSize
         {
             get
             {
-                throw new NotImplementedException();
+                return cellSize;
             }
 
             set
             {
-                throw new NotImplementedException();
+                cellSize = value;
+                imageBuilder.CellSize = value;
+                NotifyObservers(CellSizeChanged);
             }
         }
 
@@ -34,12 +49,14 @@ namespace GameOfLifeApp.Logic
         {
             get
             {
-                throw new NotImplementedException();
+                return file;
             }
 
             set
             {
-                throw new NotImplementedException();
+                IDocument newDoc = LoadNewDoc(value);
+                DetachFromOldDocument();
+                AttachToNewDocument(value, newDoc);
             }
         }
 
@@ -47,7 +64,12 @@ namespace GameOfLifeApp.Logic
         {
             get
             {
-                throw new NotImplementedException();
+                return image;
+            }
+            private set
+            {
+                image = value;
+                NotifyObservers(ImageChanged);
             }
         }
 
@@ -57,7 +79,10 @@ namespace GameOfLifeApp.Logic
 
         public void NextImage()
         {
-            throw new NotImplementedException();
+            if (document != null)
+            {
+                document.NextState();
+            }
         }
 
         public void ProcessCommandLineArguments(string[] args)
@@ -67,7 +92,10 @@ namespace GameOfLifeApp.Logic
 
         public void ResetImage()
         {
-            throw new NotImplementedException();
+            if (document != null)
+            {
+                document.Reset();
+            }
         }
 
         public void StartAnimation()
@@ -79,5 +107,65 @@ namespace GameOfLifeApp.Logic
         {
             throw new NotImplementedException();
         }
+
+        private IDocument LoadNewDoc(string newFile)
+        {
+            if (string.IsNullOrEmpty(newFile))
+            {
+                return null;
+            }
+
+            return factory.LoadFile(newFile);
+        }
+
+        private void DetachFromOldDocument()
+        {
+            if (document != null)
+            {
+                document.CurrentStateChanged -= OnLifeStateChanged;
+            }
+        }
+
+        private void AttachToNewDocument(string newFile, IDocument newDoc)
+        {
+            file = newFile;
+            document = newDoc;
+            if (document != null)
+            {
+                document.CurrentStateChanged += OnLifeStateChanged;
+            }
+            NotifyObservers(FileChanged);
+            UpdateImage();
+        }
+
+        private void OnLifeStateChanged(object sender, EventArgs args)
+        {
+            if (sender != document)
+            {
+                throw new InvalidOperationException("Unknown sender.");
+            }
+            UpdateImage();
+        }
+
+        private void UpdateImage()
+        {
+            if (document != null)
+            {
+                Image = imageBuilder.AsImage(document.CurrentState);
+            }
+            else
+            {
+                Image = logo;
+            }
+        }
+
+        private void NotifyObservers(EventHandler localHandler)
+        {
+            if (localHandler != null)
+            {
+                localHandler(this, EventArgs.Empty);
+            }
+        }
+
     }
 }
