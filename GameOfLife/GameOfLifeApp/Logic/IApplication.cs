@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GameOfLifeApp.Logic
 {
-    public interface IApplication
+    public interface IApplication : IDisposable
     {
         Image Image { get; }
 

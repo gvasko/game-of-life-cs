@@ -119,9 +119,11 @@ namespace GameOfLifeAppTest.Logic
         public void GivenNewApp_WhenFileLoadedNextAndReset_ThenImageUpdated()
         {
             sutApp.File = dummyExistingFile;
+            sutApp.NextImage();
             sutApp.ResetImage();
 
-            spyImageEventHandler.Received(2).Invoke(Arg.Is<object>(sutApp), Arg.Any<EventArgs>());
+            //spyImage.Received().Dispose();
+            spyImageEventHandler.Received(3).Invoke(Arg.Is<object>(sutApp), Arg.Any<EventArgs>());
         }
 
         [TestMethod]

@@ -79,8 +79,10 @@ namespace GameOfLifeApp.Logic
             {
                 if (image != value)
                 {
+                    Image oldImage = image;
                     image = value;
                     NotifyObservers(ImageChanged);
+                    oldImage.Dispose();
                 }
             }
         }
@@ -197,5 +199,16 @@ namespace GameOfLifeApp.Logic
             }
         }
 
+        public void Dispose()
+        {
+            if (image != logo)
+            {
+                logo.Dispose();
+            }
+            if (image != null)
+            {
+                image.Dispose();
+            }
+        }
     }
 }
