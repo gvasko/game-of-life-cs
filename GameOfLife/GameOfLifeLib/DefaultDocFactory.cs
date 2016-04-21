@@ -53,6 +53,7 @@ namespace GameOfLifeLib
         }
 
         // TODO: untested code
+        // TODO: I don't like the error handling
         public ILifeState LoadLifeStateFromFile(string path)
         {
             string[] lines = File.ReadAllLines(path);
