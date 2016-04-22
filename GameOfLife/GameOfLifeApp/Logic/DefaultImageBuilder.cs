@@ -95,12 +95,17 @@ namespace GameOfLifeApp.Logic
 
         private GraphicsPath CreateGrid(BoundingBox box)
         {
-            GraphicsPath grid = new GraphicsPath();
-
-            if (!GridEnabled)
+            if (GridEnabled)
             {
-                return grid;
+                return CreateGridBase(box);
             }
+
+            return new GraphicsPath();
+        }
+
+        private static GraphicsPath CreateGridBase(BoundingBox box)
+        {
+            GraphicsPath grid = new GraphicsPath();
 
             int minX = box.MinPoint.X;
             int minY = box.MinPoint.Y;
