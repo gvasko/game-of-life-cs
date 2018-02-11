@@ -85,14 +85,14 @@ namespace GameOfLifeLib
 
         public override bool Equals(object obj)
         {
-            if (this == obj)
+            if ((object)this == obj)
             {
                 return true;
             }
 
             DefaultLifeState that = obj as DefaultLifeState;
 
-            if (that == null)
+            if ((object)that == null)
             {
                 return false;
             }

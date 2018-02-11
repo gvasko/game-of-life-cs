@@ -11,14 +11,11 @@ namespace GameOfLifeLib
     {
         private IList<LifeRule> rules;
         private IDocFactory factory;
-        private ILifeState currentState;
-        private IList<Cell> nextLiveCells;
 
         public DefaultLife(IDocFactory factory)
         {
             this.factory = factory;
             rules = new List<LifeRule>();
-            nextLiveCells = null;
         }
 
         public void AddRule(LifeRule rule)
@@ -51,43 +48,59 @@ namespace GameOfLifeLib
                 return currentState;
             }
 
-            this.currentState = currentState;
-            nextLiveCells = new List<Cell>();
+            StateCalculator stateCalculator = new StateCalculator(currentState, rules);
 
-            currentState.VisitEachCell(CalculateNextCellStatus);
+            currentState.VisitEachCell(stateCalculator.CalculateNextCellStatus);
 
-            var nextState = factory.CreateLifeState(nextLiveCells.ToArray());
-
-            this.currentState = null;
-            nextLiveCells = null;
-
-            return nextState;
+            return factory.CreateLifeState(stateCalculator.NextLiveCells);
         }
 
-        private void CalculateNextCellStatus(Cell cell, CellStatus status)
+        private class StateCalculator
         {
-            bool processed = false;
-            foreach (LifeRule rule in rules)
-            {
-                CellStatus nextStatus = rule(currentState, cell);
+            private IList<LifeRule> rules;
+            private ILifeState currentState;
+            private IList<Cell> nextLiveCells;
 
-                if (nextStatus == null)
+            public Cell[] NextLiveCells
+            {
+                get { return nextLiveCells.ToArray(); }
+            }
+
+            public StateCalculator(ILifeState currentState, IList<LifeRule> rules)
+            {
+                this.rules = rules;
+                this.currentState = currentState;
+                this.nextLiveCells = new List<Cell>();
+            }
+
+            public void CalculateNextCellStatus(Cell cell, CellStatus status)
+            {
+                CellStatus nextStatus = null;
+
+                foreach (LifeRule rule in rules)
                 {
-                    continue;
+                    nextStatus = rule(currentState, cell);
+
+                    if (nextStatus == null)
+                    {
+                        continue;
+                    }
+
+                    if (nextStatus == CellStatus.Alive)
+                    {
+                        nextLiveCells.Add(cell);
+                    }
+                    break;
                 }
 
-                if (nextStatus == CellStatus.Alive)
+                if (status == CellStatus.Alive && nextStatus == null)
                 {
-                    nextLiveCells.Add(cell);
+                    throw new InvalidOperationException("Undefined cell status");
                 }
-                processed = true;
-                break;
             }
-            if (!processed && status == CellStatus.Alive)
-            {
-                throw new InvalidOperationException("Undefined cell status");
-            }
+
         }
+
 
     }
 }
